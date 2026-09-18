@@ -25,8 +25,8 @@ moment of publishing FLTK v1.5 was still in development.)
 
 
 ### Copyright:
-- Georg Potthast, 6 mar 2012 – 10 sept 2026,
-- Georg Potthast and others, 11 sept 2026 – …
+- Georg Potthast, 6 mar 2012 – 17 sept 2026,
+- Georg Potthast and others, 18 sept 2026 – …
 
 Maintainer: Andre Steenveld.
 
