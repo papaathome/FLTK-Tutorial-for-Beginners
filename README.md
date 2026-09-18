@@ -36,7 +36,7 @@ Maintainer: Andre Steenveld.
 
 Version information:
 - v1, 6 mar 2012, released as [„FLTK 1.3.0 Tutorial“](FLTK-Tutorial-v1.pdf).
-- v2, 18 sept 2026, released as [„FLTK Tutorial, for FLTK v1.3.0 – 1.5.x“](FLTK-Tutorial-v1.pdf).
+- v2, 18 sept 2026, released as [„FLTK Tutorial, for FLTK v1.3.0 – 1.5.x“](FLTK-Tutorial-v2.pdf).
 
 
 <a name="tutorial"></a>
