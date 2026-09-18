@@ -50,7 +50,7 @@ A reference to the FLTK-Tutorial from [FLTK](https://www.fltk.org/links.php?V455
 > widget, the tree widget and events.
 
 Tutorial table of content:
-1. Introduction (v2)
+1. Introduction
 2. The FLTK structure
 3. Installation of the FLTK toolkit
 4. The first program
