@@ -76,7 +76,7 @@ Tutorial table of content:
 
 To read the tutorial only a pdf viewer is needed. But to get the most out of it a C/C++ compiler
 and the [FLTK library](https://github.com/fltk/fltk) is needed. The tutorial includes instructions 
-for this. If that is not enough FLTK itself also include extensive and details directives for this.
+for this. If that is not enough, FLTK itself also include extensive and detailed directives.
 
 The examples in the tutorial include C++ sources and a short explanation on how it works. It is easy
 to extract the code from the tutorial (by copy/paste or extracting all code at once by filtering).
