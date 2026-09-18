@@ -1,6 +1,13 @@
 # Prerequisites
 *.d
 
+# vim related files.
+*.vim
+*.swp
+
+# tutorial example files.
+example*.*
+
 # Compiled Object files
 *.slo
 *.lo
