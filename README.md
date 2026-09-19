@@ -25,8 +25,8 @@ moment of publishing FLTK v1.5 was still in development.)
 
 
 ### Copyright:
-- Georg Potthast, 6 mar 2012 – 10 sept 2026,
-- Georg Potthast and others, 11 sept 2026 – …
+- Georg Potthast, 6 mar 2012 – 17 sept 2026,
+- Georg Potthast and others, 18 sept 2026 – …
 
 Maintainer: Andre Steenveld.
 
@@ -35,8 +35,8 @@ Maintainer: Andre Steenveld.
 	covering FLTK v1.3.0 – v1.5rev2026/09/10
 
 Version information:
-- v1, 6 mar 2012, released as [„FLTK 1.3.0 Tutorial“](https://github.com/papaathome/FLTK-Tutorial-for-Beginners/blob/FLTK-Tutorial-v1.pdf).
-- v2, 18 sept 2026, released as [„FLTK Tutorial, for FLTK v1.3.0 – 1.5.x“](https://github.com/papaathome/FLTK-Tutorial-for-Beginners/blob/FLTK-Tutorial-v1.pdf).
+- v1, 6 mar 2012, released as [„FLTK 1.3.0 Tutorial“](FLTK-Tutorial-v1.pdf).
+- v2, 18 sept 2026, released as [„FLTK Tutorial, for FLTK v1.3.0 – 1.5.x“](FLTK-Tutorial-v2.pdf).
 
 
 <a name="tutorial"></a>
@@ -50,7 +50,7 @@ A reference to the FLTK-Tutorial from [FLTK](https://www.fltk.org/links.php?V455
 > widget, the tree widget and events.
 
 Tutorial table of content:
-1. Introduction (v2)
+1. Introduction
 2. The FLTK structure
 3. Installation of the FLTK toolkit
 4. The first program
