@@ -71,6 +71,60 @@ Tutorial table of content:
 19. References
 20. Changes (v2)
 
+### Extract example code
+
+There are two ways for extracting example sources from the tutorial.
+1. Open tutorial and use _copy/paste_ actions.
+2. Stream tutorial and filter out all examples.
+
+The first method works on both versions of the tutorial. The second only on v2 (or better).
+
+From v2 and onward all examples have delimiter tokens around it, very much like 
+[C++ string literals](https://en.cppreference.com/cpp/language/string_literal) or a Python
+multiline string literal. This enables you to create a pipe line for the following actions:
+
+```
+    doc2txt | filter | format | split
+```
+
+This is what the script `ParseTutorial.sh` will do for you. It requires the following commands:
+- for doc2txt: `pdftotext ...`
+- for filter: `awk -f extract.awk`
+- for format: `clang-format`
+- for split: `awk -f split.awk`
+
+For each example this script will create a file with the name from the first line of the example
+with all code in it for that example.
+
+The `extract.awk` script also changes the definition of `main(...)` into the following line:
+
+```
+    int fl_main(int argc, char **argv)
+```
+
+This action is based on a separations of concerns, it separates the example code from direct
+activation and gives you more control over the flow of control. The extracted examples will
+compile but not link without an instance of `int main(...)`. The next bit of code is a
+convenient example of this.
+
+
+```
+    // forward declaration of fl_main.
+    int fl_main(int argc, char **argv);
+
+    // executable access point, start of control.
+    int main(int argc, char **argv) {
+        // any actions before calling fl_main.
+
+        auto result = fl_main(argc, argv);
+
+        // any actions after returning from fl_main.
+
+        return result;
+    }
+```
+
+
 <a name="requirements"></a>
 ## Requirements:
 
