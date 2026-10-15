@@ -6,8 +6,9 @@ FLTK tutorial for beginners, covering FLTK v1.3.0 to 1.5
 Content
 -------
 
-- [introduction](#introduction)
+- [Introduction](#introduction)
 - [FLTK-Tutorial](#tutorial)
+- [How to build](#build)
 - [Requirements](#requirements)
 
 
@@ -23,10 +24,12 @@ The originale version is writen for FLTK v1.3.0 and the next version is idential
 version with corrections for errors in the examples, tested against FLTK v1.4.5 and v1.5. (At the
 moment of publishing FLTK v1.5 was still in development.)
 
+With the tutorial a CMake environment is available for building, testing and extending the examples.
+This is tested on Debian Trixie. (TODO: test on MS windows systems.)
 
 ### Copyright:
 - Georg Potthast, 6 mar 2012 – 17 sept 2026,
-- Georg Potthast and others, 18 sept 2026 – …
+- Georg Potthast, Andre Steenveld, 18 sept 2026 – …
 
 Maintainer: Andre Steenveld.
 
@@ -77,38 +80,37 @@ There are two ways for extracting example sources from the tutorial.
 1. Open tutorial and use _copy/paste_ actions.
 2. Stream tutorial and filter out all examples.
 
-The first method works on both versions of the tutorial. The second only on v2 (or better).
+The first method works on both versions of the tutorial. The second works only on v2 (or better).
 
-From v2 and onward all examples have delimiter tokens around it, very much like 
+From v2 and onward all example code have delimiter tokens around it, very much like 
 [C++ string literals](https://en.cppreference.com/cpp/language/string_literal) or a Python
-multiline string literal. This enables you to create a pipe line for the following actions:
+multiline string literal. This enables you to create a pipe line with the following actions:
 
-```
+```console
     doc2txt | filter | format | split
 ```
 
-This is what the script `ParseTutorial.sh` will do for you. It requires the following commands:
+This is what the script `./tools/ParseTutorial.sh` will do for you. It includes the following commands:
 - for doc2txt: `pdftotext ...`
-- for filter: `awk -f extract.awk`
+- for filter: `awk -f tools/extract.awk`
 - for format: `clang-format`
 - for split: `awk -f split.awk`
 
-For each example this script will create a file with the name from the first line of the example
-with all code in it for that example.
+This script will, for each example, create a file with the name from the first line of the example
+tag and write all code from the example to that file.
 
 The `extract.awk` script also changes the definition of `main(...)` into the following line:
 
-```
+```C++
     int fl_main(int argc, char **argv)
 ```
 
-This action is based on a separations of concerns, it separates the example code from direct
-activation and gives you more control over the flow of control. The extracted examples will
-compile but not link without an instance of `int main(...)`. The next bit of code is a
-convenient example of this.
+This action is based on a separation of concerns, it separates the example code from direct
+activation and gives easier flow control. The extracted examples will compile but not link
+without an instance of `int main(...)`. The next snipped is a convenient example for this.
 
 
-```
+```C++
     // forward declaration of fl_main.
     int fl_main(int argc, char **argv);
 
@@ -125,11 +127,165 @@ convenient example of this.
 ```
 
 
+<a name="build"></a>
+## How to build:
+
+This CMake project will not build 'out of the box', it needs some configuration details first.
+An instance of the FLTK library is required, version 1.4.5, 1.5.x or any other.
+
+Warning: On Debian Trixie the system wide instance of FLTK (v1.4.3, 2026/01/10) does contain 
+a package problem and can not be uses. See [FLTK forum thread](https://www.fltk.org/newsgroups.php?s45116+gfltk.general+v45125).
+At the moment of writing it is not known if an update or a backport version is made available.
+
+Comming soon: Build on MS windows systems with MSVS. The CMake configuration is not yet fully
+tested on this environment. (Work in progress.)
+
+If you want to test against FLTK v1.5.x it is advised to use a local instance of it and not to
+install two versions of FLTK as system wide resources. Clone a copy of v1.5.x and build that.
+Then do not install but use the build results direct. This way it is also easy to have multiple
+versions of FLTK available for testing. A local version is required, the way how you organise
+this is not crusial. I assume that there is a 'good practice' directive on how to do this.
+As an example a possible configuration:
+
+```
+    ~/lib/                         # where I install local libraries.
+     `-- packages/                 # where I build local packages.
+          `-- fltk/                # where I build local FLTK versions.
+               +-- fltk-1.4.5/     # clone of v1.4.5
+               |    `-- build/     # CMake build results.
+               `-- fltk-1.5/       # clone of v1.5
+                    `-- build/     # CMake build results.
+```
+
+The bash script `./build.sh` is used for configuration and driving CMake. The script guarantees
+that essential arguments are always used for each CMake action. It contains settings related
+to FLTK version details (among a few other settings):
+
+```bash
+    # local libraries location
+    LOCAL_LIB="~/lib"
+
+    # FLTK version to use
+    FLTK_VERSION="1.4.5"
+    #FLTK_VERSION="1.5"
+
+    # FLTK path (empty: use system wide instance).
+    #FLTK_DIR=""
+    FLTK_DIR="$$LOCAL_LIB/packages/fltk/fltk-$FLTK_VERSION/build"
+```
+
+After checking the configuration in the bash script you can use the following commands for CMake.
+Please note that `./build.sh --test` will start each example in sequence but waits for you to
+close the running example before it starts the next one. The tests check for an exit result of
+0 (zero) and no exceptions, no furter testing is done. The timing result is not relevant. Actual
+testing involves much more and should use 'Boost-test' or similar testing frameworks.
+
+```console
+$ ./build.sh
+./build.sh mode [arguments]
+bash build.sh mode [arguments]
+
+mode:
+--generate    start cmake for generating a build system.
+--build       start cmake for building the targets.
+--test        start ctest for test targets.
+--install     start cmake for installing.
+--pack        start cpack for building a package.
+
+arguments     list of arguments copied verbatum to cmake.
+
+Assumed settings:
+The first part of this script contains dependencies configuration.
+Check the configuration before attemting to generate or build.
+
+Examples:
+This will recreate a build system from scratch.
+build.sh --generate --fresh
+
+This will build all targets (except documentaton).
+build.sh --build --config Release
+
+This will rebuild all targets from scratch (except documentation).
+build.sh --build --clean-first
+
+This will build only the manual.
+build.sh --build --target manual
+
+This will build only the man pages
+build.sh --build --target manpages
+
+This will run all tests (tester must manualy close all window forms).
+build.sh --test
+
+This will run all tests, with output for failing tests.
+build.sh --test --output-on-failure
+
+$ ./build.sh --generate
+cmake -S . -B ./build \
+    -DCMAKE_CXX_STANDARD=23 \
+    -DCMAKE_CXX_STANDARD_REQUIRED=ON \
+    -DCMAKE_CXX_EXTENSIONS=OFF \
+    -DCMAKE_INSTALL_PREFIX=~/lib \
+    -DFLTK_VERSION=1.4.5 \
+    -DFLTK_DIR=~/lib/packages/fltk/fltk-1.4.5/build
+...
+$ ./build.sh --build
+cmake --build ./build
+...
+$ ./build/source/example1
+10:52:15.979 140468741339904 main(): open FLTK main form
+10:52:20.383 140468741339904 main(): OK
+10:52:20.383 140468741339904 main(): 0
+$ ./build.sh --test
+Test project ./FLTK-Tutorial-for-Beginners/build
+      Start  1: example0
+ 1/18 Test  #1: example0 .........................   Passed    0.00 sec
+      Start  2: example1
+ 2/18 Test  #2: example1 .........................   Passed    2.82 sec
+      Start  3: example2
+ 3/18 Test  #3: example2 .........................   Passed    1.76 sec
+      Start  4: example3
+ 4/18 Test  #4: example3 .........................   Passed    0.91 sec
+      Start  5: example4
+ 5/18 Test  #5: example4 .........................   Passed    0.76 sec
+      Start  6: example5
+ 6/18 Test  #6: example5 .........................   Passed    1.51 sec
+      Start  7: example6
+ 7/18 Test  #7: example6 .........................   Passed    1.33 sec
+      Start  8: example7
+ 8/18 Test  #8: example7 .........................   Passed    1.32 sec
+      Start  9: example8
+ 9/18 Test  #9: example8 .........................   Passed    1.51 sec
+      Start 10: example9
+10/18 Test #10: example9 .........................   Passed    5.19 sec
+      Start 11: example10
+11/18 Test #11: example10 ........................   Passed    1.25 sec
+      Start 12: example11
+12/18 Test #12: example11 ........................   Passed    1.64 sec
+      Start 13: example12
+13/18 Test #13: example12 ........................   Passed    1.04 sec
+      Start 14: example13
+14/18 Test #14: example13 ........................   Passed    1.34 sec
+      Start 15: example14
+15/18 Test #15: example14 ........................   Passed    1.21 sec
+      Start 16: example15
+16/18 Test #16: example15 ........................   Passed    1.54 sec
+      Start 17: example16
+17/18 Test #17: example16 ........................   Passed    1.46 sec
+      Start 18: example17
+18/18 Test #18: example17 ........................   Passed    1.51 sec
+
+100% tests passed, 0 tests failed out of 18
+
+Total Test time (real) =  28.11 sec
+```
+
+
 <a name="requirements"></a>
 ## Requirements:
 
-To read the tutorial only a pdf viewer is needed. But to get the most out of it a C/C++ compiler
-and the [FLTK library](https://github.com/fltk/fltk) is needed. The tutorial includes instructions 
+To read the tutorial only a pdf viewer is needed. But to get the most out of it also use a C/C++ compiler
+and the [FLTK library](https://github.com/fltk/fltk) and work with the code. The tutorial includes instructions 
 for this. If that is not enough, FLTK itself also include extensive and detailed directives.
 
 The examples in the tutorial include C++ sources and a short explanation on how it works. It is easy
