@@ -137,7 +137,7 @@ Warning: On Debian Trixie the system wide instance of FLTK (v1.4.3, 2026/01/10) 
 a package problem and can not be uses. See [FLTK forum thread](https://www.fltk.org/newsgroups.php?s45116+gfltk.general+v45125).
 At the moment of writing it is not known if an update or a backport version is made available.
 
-Comming soon: Build on MS windows systems with MSVS. The CMake configuration is not yet fully
+Comming soon: Build on MS windows systems with MSVC. The CMake configuration is not yet fully
 tested on this environment. (Work in progress.)
 
 If you want to test against FLTK v1.5.x it is advised to use a local instance of it and not to
@@ -171,7 +171,7 @@ to FLTK version details (among a few other settings):
 
     # FLTK path (empty: use system wide instance).
     #FLTK_DIR=""
-    FLTK_DIR="$$LOCAL_LIB/packages/fltk/fltk-$FLTK_VERSION/build"
+    FLTK_DIR="$LOCAL_LIB/packages/fltk/fltk-$FLTK_VERSION/build"
 ```
 
 After checking the configuration in the bash script you can use the following commands for CMake.
@@ -284,8 +284,8 @@ Total Test time (real) =  28.11 sec
 <a name="requirements"></a>
 ## Requirements:
 
-To read the tutorial only a pdf viewer is needed. But to get the most out of it also use a C/C++ compiler
-and the [FLTK library](https://github.com/fltk/fltk) and work with the code. The tutorial includes instructions 
+To read the tutorial only a pdf viewer is needed. But to get the most out of it also use a C/C++ compiler,
+the [FLTK library](https://github.com/fltk/fltk) and work with the code. The tutorial includes instructions 
 for this. If that is not enough, FLTK itself also include extensive and detailed directives.
 
 The examples in the tutorial include C++ sources and a short explanation on how it works. It is easy

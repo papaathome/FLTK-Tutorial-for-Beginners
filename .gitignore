@@ -5,9 +5,6 @@
 *.vim
 *.swp
 
-# tutorial example files.
-example*.*
-
 # Compiled Object files
 *.slo
 *.lo
