@@ -60,6 +60,10 @@ int canvas::handle(int event) {
     button = Fl::event_button();
     x = Fl::event_x();
     y = Fl::event_y();
+    break;
+  default:
+    button = 0;
+    break;
   }
   switch (button) {
   case 1: // Left button
