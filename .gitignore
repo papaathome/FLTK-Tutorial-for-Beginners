@@ -5,6 +5,9 @@
 *.vim
 *.swp
 
+# local files
+_diary.*
+
 # Compiled Object files
 *.slo
 *.lo

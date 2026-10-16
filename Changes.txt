@@ -1,0 +1,23 @@
+Changes.log
+---
+
+
+aim: manage tutorial examples in a cmake environment.
+
+
+2026-10-16T11:56:06 user:andre; author:Andre Steenveld.
+- Changes.txt added.
+- build and test with MSVC
+- bug fix in example15, uninitialised variable.
+
+2026-09-19T11:25:36 initial version of the cmake environment; user:andre; author:Andre Steenveld.
+- Configured, build and tested on Debian trixie.
+- For local configuration details see `./build.sh` settings:
+  LOCAL_LIB:          path to local libraries. default:"~/lib"
+  FLTK_VERSION:       FLTK version to use, "1.4.5" or "1.5"
+  FLTK_DIR:           FLTK package build path.
+  CMAKE_BUILD_PATH:   default CMAKE build location.
+  PACKAGE_CMAKE_ARGS: default package CMAKE arguments.
+- Deviation from tutorial:
+  - replaced `int main(...)` with `int fl_main(...)` for more testing and debugging.
+  - added `example0` which starts, does not call any FLTK function and exits (zero-test).

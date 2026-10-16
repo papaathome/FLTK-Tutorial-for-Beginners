@@ -132,13 +132,11 @@ without an instance of `int main(...)`. The next snipped is a convenient example
 
 This CMake project will not build 'out of the box', it needs some configuration details first.
 An instance of the FLTK library is required, version 1.4.5, 1.5.x or any other.
+The CMake project is tested on Debian Trixie with GCC and on Windows 10 pro with MSVC.
 
 Warning: On Debian Trixie the system wide instance of FLTK (v1.4.3, 2026/01/10) does contain 
 a package problem and can not be uses. See [FLTK forum thread](https://www.fltk.org/newsgroups.php?s45116+gfltk.general+v45125).
 At the moment of writing it is not known if an update or a backport version is made available.
-
-Comming soon: Build on MS windows systems with MSVC. The CMake configuration is not yet fully
-tested on this environment. (Work in progress.)
 
 If you want to test against FLTK v1.5.x it is advised to use a local instance of it and not to
 install two versions of FLTK as system wide resources. Clone a copy of v1.5.x and build that.
@@ -147,6 +145,7 @@ versions of FLTK available for testing. A local version is required, the way how
 this is not crusial. I assume that there is a 'good practice' directive on how to do this.
 As an example a possible configuration:
 
+Debian Trixie
 ```
     ~/lib/                         # where I install local libraries.
      `-- packages/                 # where I build local packages.
@@ -157,10 +156,23 @@ As an example a possible configuration:
                     `-- build/     # CMake build results.
 ```
 
-The bash script `./build.sh` is used for configuration and driving CMake. The script guarantees
-that essential arguments are always used for each CMake action. It contains settings related
-to FLTK version details (among a few other settings):
+MS windows
+```
+    C:\home\andre\development\
+        _lib\                      # where I install local libraries.
+         `-- FLTK\                 # where I build local FLTK versions.
+              +-- fltk-1.4.5\      # clone of v1.4.5
+              |    `-- build\      # CMake build results.
+              `-- fltk-1.5\        # clone of v1.5
+                   `-- build\      # CMake build results.
+```
 
+
+The bash script `./build.sh` or the batch file `.\build.cmd` is used for configuration and
+driving CMake. This guarantees that essential arguments are always used for each CMake action.
+It contains settings related to FLTK version details (among a few other settings):
+
+bash script:
 ```bash
     # local libraries location
     LOCAL_LIB="~/lib"
@@ -174,12 +186,28 @@ to FLTK version details (among a few other settings):
     FLTK_DIR="$LOCAL_LIB/packages/fltk/fltk-$FLTK_VERSION/build"
 ```
 
-After checking the configuration in the bash script you can use the following commands for CMake.
-Please note that `./build.sh --test` will start each example in sequence but waits for you to
-close the running example before it starts the next one. The tests check for an exit result of
-0 (zero) and no exceptions, no furter testing is done. The timing result is not relevant. Actual
-testing involves much more and should use 'Boost-test' or similar testing frameworks.
+batch file:
+```batch
+    :: local libraries location
+    set LOCAL_LIB=C:/home/andre/lib
 
+    :: FLTK version to use
+    set FLTK_VERSION=1.4.5
+    ::set FKTK_VERSION=1.5
+
+    :: FLTK path (empty: use system wide instance).
+    ::set FLTK_DIR=
+    set FLTK_DIR=C:/home/andre/development/_lib/FLTK/fltk-%FLTK_VERSION%/build
+```
+
+After checking the configuration in the script or batch file you can use the following commands
+for CMake. Please note that `./build.sh --test` or `.\build.cmd --test -C Debug` will start each
+example in sequence but waits for you to close the running example before it starts the next one.
+The tests check for an exit result of 0 (zero) and no exceptions, no furter testing is done.
+The timing result is not relevant. Actual testing involves much more and should use 'Boost-test'
+or similar testing frameworks.
+
+On Debian Trixie:
 ```console
 $ ./build.sh
 ./build.sh mode [arguments]
@@ -280,6 +308,108 @@ Test project ./FLTK-Tutorial-for-Beginners/build
 Total Test time (real) =  28.11 sec
 ```
 
+On MS windows:
+```console
+>.\build.cmd
+build.cmd mode [arguments]
+
+mode:
+--generate    start cmake for generating a build system.
+--build       start cmake for building the targets.
+--test        start ctest for test targets.
+--install     start cmake for installing.
+--pack        start cpack for building a package.
+
+arguments     list of arguments copied verbatum to cmake.
+
+Assumed settings:
+The first part of this script contains dependencies configuration.
+Check the configuration before attemting to generate or build.
+
+Examples:
+This will recreate a build system from scratch.
+build --generate --fresh
+
+This will build all targets in Debug mode except documentation.
+build --build --config Release
+ECHO is off.
+This will rebuild all targets from scratch in Debug mode except documentaton.
+build --build --clean-first
+
+This will build only the manual.
+build --build --target manual
+
+This will build only Doxigen documentation.
+Entry: ./build/doxygen/html/index.html.
+build --build --target docs
+
+This will run all tests, tester must manualy close all window forms.
+build.sh --test -C Debug
+
+This will run all tests, with output for failing tests.
+build.sh --test -C Debug --output-on-failure
+
+>.\build.cmd --generate
+cmake.exe -S . -B "./build" \
+    -DCMAKE_CXX_STANDARD=23 \
+    -DCMAKE_CXX_STANDARD_REQUIRED=ON \
+    -DCMAKE_CXX_EXTENSIONS=OFF \
+    -DCMAKE_INSTALL_PREFIX=C:/home/andre/lib \
+    -DFLTK_VERSION=1.4.5 \
+    -DFLTK_DIR=C:/home/andre/development/_lib/FLTK/fltk-1.4.5/build
+-- Building for: Visual Studio 18 2026
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.19045.
+...
+>.\build.cmd --build
+cmake.exe --build "./build"
+...
+>.\build\source\Debug\example1.exe
+12:24:38.626 6000 main(): open FLTK main form
+12:24:41.712 6000 main(): OK
+12:24:41.713 6000 main(): 0
+>.\build.cmd --test -C Debug
+Test project C:/home/andre/development/FLTK-Tutorial-for-Beginners/build
+      Start  1: example0
+ 1/18 Test  #1: example0 .........................   Passed    0.01 sec
+      Start  2: example1
+ 2/18 Test  #2: example1 .........................   Passed    3.13 sec
+      Start  3: example2
+ 3/18 Test  #3: example2 .........................   Passed    1.82 sec
+      Start  4: example3
+ 4/18 Test  #4: example3 .........................   Passed    1.57 sec
+      Start  5: example4
+ 5/18 Test  #5: example4 .........................   Passed    1.69 sec
+      Start  6: example5
+ 6/18 Test  #6: example5 .........................   Passed    1.91 sec
+      Start  7: example6
+ 7/18 Test  #7: example6 .........................   Passed    1.63 sec
+      Start  8: example7
+ 8/18 Test  #8: example7 .........................   Passed    1.67 sec
+      Start  9: example8
+ 9/18 Test  #9: example8 .........................   Passed    1.55 sec
+      Start 10: example9
+10/18 Test #10: example9 .........................   Passed    1.45 sec
+      Start 11: example10
+11/18 Test #11: example10 ........................   Passed    1.86 sec
+      Start 12: example11
+12/18 Test #12: example11 ........................   Passed    1.88 sec
+      Start 13: example12
+13/18 Test #13: example12 ........................   Passed    1.52 sec
+      Start 14: example13
+14/18 Test #14: example13 ........................   Passed    1.69 sec
+      Start 15: example14
+15/18 Test #15: example14 ........................   Passed    1.50 sec
+      Start 16: example15
+16/18 Test #16: example15 ........................   Passed    1.73 sec
+      Start 17: example16
+17/18 Test #17: example16 ........................   Passed    1.79 sec
+      Start 18: example17
+18/18 Test #18: example17 ........................   Passed    1.73 sec
+
+100% tests passed, 0 tests failed out of 18
+
+Total Test time (real) =  30.19 sec
+```
 
 <a name="requirements"></a>
 ## Requirements:
