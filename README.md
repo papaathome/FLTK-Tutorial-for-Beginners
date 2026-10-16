@@ -25,7 +25,7 @@ version with corrections for errors in the examples, tested against FLTK v1.4.5 
 moment of publishing FLTK v1.5 was still in development.)
 
 With the tutorial a CMake environment is available for building, testing and extending the examples.
-This is tested on Debian Trixie. (TODO: test on MS windows systems.)
+This is tested on Debian Trixie with GCC and on MS windows with MSVC.
 
 ### Copyright:
 - Georg Potthast, 6 mar 2012 – 17 sept 2026,
