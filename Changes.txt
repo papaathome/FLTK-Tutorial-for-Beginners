@@ -5,6 +5,9 @@ Changes.log
 aim: manage tutorial examples in a cmake environment.
 
 
+2026-10-17T08:54:46 user:andre; author:Andre Steenveld.
+- issue#1 in example1 fix, order of arguments.
+
 2026-10-16T11:56:06 user:andre; author:Andre Steenveld.
 - Changes.txt added.
 - build and test with MSVC
